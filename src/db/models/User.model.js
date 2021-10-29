@@ -20,11 +20,11 @@ User.init(
         },
         email: {
             type: Sequelize.STRING,
-            allowNull: false
+            defaultValue: ''
         },
         name: {
             type: Sequelize.STRING,
-            allowNull: false
+            defaultValue: ''
         }
     },
     { sequelize: sequelize, underscored: true, modelName: 'user' }

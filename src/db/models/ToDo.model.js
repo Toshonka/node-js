@@ -9,15 +9,13 @@ ToDo.init(
             primaryKey: true,
             defaultValue: Sequelize.DataTypes.UUIDV4
         },
-        userId: {
-            type: Sequelize.DataTypes.UUID,
-        },
         title: {
             type: Sequelize.STRING,
             defaultValue: 'Title',
         },
         description: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            defaultValue: '',
         },
         isCompleted: {
             type: Sequelize.BOOLEAN,

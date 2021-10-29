@@ -1,7 +1,9 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const apiRouter = require('./controllers/api-todos.controllers');
+const apiTodoRouter = require('./controllers/api-todos.controllers');
+const apiAuthRouter = require('./controllers/api-auth.controllers');
+const apiUserRouter = require('./controllers/api-users.controllers');
 //const testRouter = require('./Controllers/test.controller');
 const { notFound, errorHandler} = require('./middlewares/middlewares');
 const { initDB } = require('./db');
@@ -24,7 +26,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/todos', apiRouter);
+app.use('/api/todos', apiTodoRouter);
+app.use('/api/auth', apiAuthRouter);
+app.use('/api/users', apiUserRouter);
 //app.use('/test', testRouter);
 
 app.use(notFound);
