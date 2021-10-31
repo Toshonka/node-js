@@ -2,17 +2,17 @@ const {Router} = require('express');
 const ErrorResponse = require('../classes/error-response');
 const User = require('../db/models/User.model');
 const Token = require('../db/models/Token.model');
-const {asyncHandler} = require('../middlewares/middlewares');
+const {asyncHandler, requireToken} = require('../middlewares/middlewares');
 
 const router = Router();
 function initRoutes() {
-    router.get('/:id', asyncHandler(getUserById));
-    router.patch('/:id', asyncHandler(updateUser));
-    router.post('/logout', asyncHandler(logoutUser));
+    router.get('/me', asyncHandler(requireToken), asyncHandler(getUserById));
+    router.patch('/me', asyncHandler(requireToken), asyncHandler(updateUser));
+    router.post('/logout', asyncHandler(requireToken), asyncHandler(logoutUser));
 }
 
 async function getUserById(req, res, next) {
-    const UserInfo = await User.findByPk(req.params.id);
+    const UserInfo = await User.findByPk(req.token.userId);
     if (!UserInfo){
         throw new ErrorResponse('No user found', 400);
     }
@@ -22,13 +22,17 @@ async function getUserById(req, res, next) {
 }
 
 async function updateUser(req, res, next) {
-    const user = await User.findByPk(req.params.id);
+    let user = await User.findByPk(req.token.userId);
 
     if (!user) {
         throw new ErrorResponse('No user found', 404);
     } 
-    await user.update(req.body);
-    res.status(200).json({message: "OK"});
+    await user.update({
+        ...req.body
+    }, {
+        returning: true
+    });
+    res.status(200).json(user);
 }
 async function logoutUser(req, res, next) {
     const dropToken = await Token.destroy({
@@ -36,8 +40,7 @@ async function logoutUser(req, res, next) {
             value: req.header('x-access-token')
         }
     })
-    const allTokens = await Token.findAll()
-    res.status(200).json(allTokens);
+    res.status(200).json({message: "OK"});
 }
 
 
