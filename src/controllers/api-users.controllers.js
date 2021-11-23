@@ -35,7 +35,7 @@ async function updateUser(req, res, next) {
     res.status(200).json(user);
 }
 async function logoutUser(req, res, next) {
-    const dropToken = await Token.destroy({
+    await Token.destroy({
         where: {
             value: req.header('x-access-token')
         }

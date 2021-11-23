@@ -28,7 +28,6 @@ const requireToken = async (req, res, next) => {
            value: token 
         }
     })
-    const userId = tokenFromDb.userId
     if(!tokenFromDb){
         throw new ErrorResponse('Token incorrect', 403);
     }

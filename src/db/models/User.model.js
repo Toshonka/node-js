@@ -41,6 +41,4 @@ ToDo.belongsTo(User, {
     foreignKey: 'userId'
 });
 
-
-
 module.exports = User;

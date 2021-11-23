@@ -1,13 +1,8 @@
-const {
-    Router
-} = require('express');
+const {Router} = require('express');
 const ErrorResponse = require('../classes/error-response');
 const ToDo = require('../db/models/ToDo.model');
 const User = require('../db/models/User.model');
-const {
-    asyncHandler,
-    requireToken
-} = require('../middlewares/middlewares');
+const {asyncHandler,requireToken} = require('../middlewares/middlewares');
 
 const router = Router();
 
@@ -27,13 +22,11 @@ async function getToDos(req, res, next) {
         }
     });
 
-    res.status(200).json({
-        todos
-    });
+    res.status(200).json(todos);
 }
 
 async function getToDoById(req, res, next) {
-    const todo = await ToDo.findByPk({
+    const todo = await ToDo.findOne({
         where: {
             id: req.params.id,
             userId: req.token.userId
@@ -46,6 +39,7 @@ async function getToDoById(req, res, next) {
 
     res.status(200).json(todo);
 }
+
 async function createToDo(req, res, next) {
     const todo = await ToDo.create({
         ...req.body,
@@ -54,8 +48,9 @@ async function createToDo(req, res, next) {
 
     res.status(200).json(todo);
 }
+
 async function deleteToDoById(req, res, next) {
-    const todo = await ToDo.findByPk({
+    const todo = await ToDo.findOne({
         where: {
             id: req.params.id,
             userId: req.token.userId
@@ -92,7 +87,6 @@ async function patchToDos(req, res, next) {
     if (!todo) {
         throw new ErrorResponse('No todo found', 404);
     }
-    const id = req.params.index;
     todo = await todo.update({
         ...req.body
     }, {
